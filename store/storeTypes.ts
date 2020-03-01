@@ -1,5 +1,9 @@
+import { SearchLocationMetadata } from "../Types/CustomeTypes";
+import LocationModel from "../models/LocationModel";
+import { CurrentWeather } from "../models/CurentWeatherModel";
+
 export interface LocationState {
-    currentLocation: null | {},
+    currentLocation: null | LocationModel,
 
     geolocationDisabled: boolean,
     geolocationLoading: boolean,
@@ -7,7 +11,7 @@ export interface LocationState {
 
     selectedLocation: null | object,
     searchResults: any[],
-    searchMetadata: {},
+    searchMetadata: SearchLocationMetadata | {},
     searchLoading: boolean,
     searchError: null | string,
 
@@ -15,7 +19,7 @@ export interface LocationState {
 };
 
 export interface WeatherState {
-    currentWeather: null | {},
+    currentWeather: null | CurrentWeather,
 	currentWeatherError: null | string,
 	currentWeatherLoading: boolean,
 	forecastWeather: null | any[],

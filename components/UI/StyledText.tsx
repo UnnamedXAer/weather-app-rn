@@ -1,9 +1,19 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, GestureResponderEvent } from 'react-native';
 import Colors from '../../constants/Colors';
 
-const StyledText = ({ children, style }: { children: React.ReactNode; style?: {} }) => {
-	return <Text style={[styles.styledText, style]}>{children}</Text>;
+interface Props {
+	children: React.ReactNode;
+	style?: {};
+	onPress?: (event: GestureResponderEvent) => void;
+}
+
+const StyledText = ({ children, style, onPress }: Props) => {
+	return (
+		<Text onPress={onPress} style={[styles.styledText, style]}>
+			{children}
+		</Text>
+	);
 };
 
 const styles = StyleSheet.create({

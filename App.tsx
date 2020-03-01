@@ -12,7 +12,7 @@ const fetchFonts = () => {
 		'Overlock-Bold-Italic': require('./assets/fonts/Overlock-BoldItalic.ttf'),
 		'Overlock-Bold': require('./assets/fonts/Overlock-Bold.ttf'),
 		'Overlock-Regular-Italic': require('./assets/fonts/Overlock-Italic.ttf'),
-		'Overlock-Regular': require('./assets/fonts/Overlock-Regular.ttf'),
+		'Overlock-Regular': require('./assets/fonts/Overlock-Regular.ttf')
 	});
 };
 

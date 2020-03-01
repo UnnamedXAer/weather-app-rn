@@ -1,18 +1,23 @@
 import React, { useState, useRef } from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { TextInput } from 'react-native-paper';
+import { NavigationStackScreenProps } from 'react-navigation-stack';
 import { fetchLocationsByPrefix, setCurrentLocation } from '../store/actions/location';
 import HeaderCart from '../components/UI/HeaderCart';
-import TouchableComponent from '../components/UI/TouchableComponent';
 import { RootState } from '../store/storeTypes';
-import StyledText from '../components/UI/StyledText';
 import Colors from '../constants/Colors';
+import LocationSearchResults from '../components/LocationSearchResults';
 
-const LocationScreen = () => {
+interface Props extends NavigationStackScreenProps {};
+
+const LocationScreen: React.FC<Props> = props => {
 	const dispatch = useDispatch();
 	const searchResults = useSelector((state: RootState) => state.location.searchResults);
-	const [locationText, setLocationText] = useState('Rzeszow');
+	const searchError = useSelector((state: RootState) => state.location.searchError);
+	const searchLoading = useSelector((state: RootState) => state.location.searchLoading);
+	const offsetInfo = useSelector((state: RootState) => state.location.searchMetadata);
+	const [locationText, setLocationText] = useState('T');
 	const [showResults, setShowResults] = useState(false);
 
 	const timeoutRef = useRef(null);
@@ -22,29 +27,34 @@ const LocationScreen = () => {
 
 		setLocationText(text);
 
-		// const trimmedValue = text.trim();
-		// if (trimmedValue.length > 1) {
-		// 	timeoutRef.current = setTimeout(() => {
-		// 		setShowResults(true);
-		// 		dispatch(fetchLocationsByPrefix(trimmedValue, 0));
-		// 	}, 700);
-		// }
+		const trimmedValue = text.trimLeft();
+		if (trimmedValue.length > 1) {
+			timeoutRef.current = setTimeout(() => {
+				setShowResults(true);
+				dispatch(fetchLocationsByPrefix(trimmedValue, 0));
+			}, 700);
+		}
 	};
 
 	const selectLocationHandler = (index: number) => {
 		const location = searchResults[index];
 		dispatch(setCurrentLocation(location));
+		props.navigation.navigate({ routeName: 'CurrentWeather' });
 	};
 
 	const submitHundler = () => {
-		console.log('searching...')
 		setShowResults(true);
-		const trimmedValue = locationText.trim();
+		const trimmedValue = locationText.trimLeft();
 		dispatch(fetchLocationsByPrefix(trimmedValue, 0));
-	}
+	};
+
+	const changePageHandler = (offset: number) => {
+		const trimmedValue = locationText.trimLeft();
+		dispatch(fetchLocationsByPrefix(trimmedValue, offset));
+	};
 
 	return (
-		<View style={styles.screen}>
+		<View>
 			<HeaderCart>
 				<TextInput
 					label="Type Your Location"
@@ -55,51 +65,42 @@ const LocationScreen = () => {
 							accent: Colors.secondary,
 							primary: Colors.primary,
 							background: Colors.secondary,
-							placeholder: '#666',
+							placeholder: Colors.grayish,
 							backdrop: Colors.white,
-							text: Colors.grayish
+							text: '#666',
+							onBackground: Colors.secondary
 						},
 						fonts: {
 							regular: {
 								fontFamily: 'Overlock-Regular',
 								fontWeight: 'normal'
 							}
-						},roundness: 2
+						},
+						roundness: 2
 					}}
 					placeholder="Type Your Location"
 					numberOfLines={1}
 					value={locationText}
-					onChangeText={locationTextChangeHandler} 
+					onChangeText={locationTextChangeHandler}
 					returnKeyType="search"
 					onSubmitEditing={submitHundler}
 				/>
 			</HeaderCart>
-
-			<ScrollView style={styles.results}>
-				{showResults && searchResults.map((city, i) => (
-					<TouchableComponent key={i} onPress={() => selectLocationHandler(i)}>
-						<View>
-							<StyledText>
-								{city.city}, ({city.countryCode})
-							</StyledText>
-							<Text>
-								{city.country} ({city.region})
-							</Text>
-						</View>
-					</TouchableComponent>
-				))}
-			</ScrollView>
+			<LocationSearchResults
+				changePage={changePageHandler}
+				error={searchError}
+				loading={searchLoading}
+				offsetInfo={offsetInfo}
+				selectLocation={selectLocationHandler}
+				locations={searchResults}
+				show={showResults}
+			/>
+			<View style={{ height: 10 }} />
 		</View>
 	);
 };
 
 const styles = StyleSheet.create({
-	screen: {
-		flex: 1
-	},
-	results: {
-		width: '100%'
-	},
 	locationInput: {
 		fontSize: 38,
 		width: '100%'

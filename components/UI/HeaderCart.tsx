@@ -9,10 +9,14 @@ const HeaderCart = ({ children }: { children: ReactNode }) => {
 const styles = StyleSheet.create({
 	headerCart: {
         backgroundColor: Colors.secondary,
-        marginVertical: 20,
-        padding: 16,
+        marginTop: 0,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+
+        elevation: 5,
+        shadowColor: 'black',
+        shadowOpacity: 0.26,
+        shadowOffset: { width: 0, height: 2 },
     }
 });
 

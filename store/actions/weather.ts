@@ -1,8 +1,9 @@
 import axios, { logReqError } from '../../axios/axios';
 import * as actionTypes from './actionTypes';
+import LocationModel from '../../models/LocationModel';
 
 
-export const fetchCurrentWeather = (location) => {
+export const fetchCurrentWeather = (location: LocationModel) => {
 	return async dispatch => {
 		dispatch(fetchCurrentWeatherStart());
 
