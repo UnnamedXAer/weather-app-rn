@@ -88,32 +88,36 @@ const CurrentWeatherDetails: React.FC<Props> = ({ weatherData, location, loading
 								</StyledText>
 							</View>
 						</View>
+						<View style={styles.links}>
+							<StyledText
+								style={styles.linlText}
+								onPress={() => linkPressHandler('details')}
+							>
+								...more on OpenWeather.com
+							</StyledText>
+							<StyledText
+								style={styles.linlText}
+								onPress={() => linkPressHandler('map')}
+							>
+								, or Show Map
+							</StyledText>
+						</View>
 					</>
 				)
 			)}
-
-			<View style={styles.links}>
-				<StyledText style={styles.linlText} onPress={() => linkPressHandler('details')}>
-					...more on OpenWeather.com
-				</StyledText>
-				<StyledText style={styles.linlText} onPress={() => linkPressHandler('map')}>
-					, or Show Map
-				</StyledText>
-			</View>
 		</View>
 	);
 };
 
 const styles = StyleSheet.create({
-	weatherDetails: {
-    },
+	weatherDetails: {},
 	focrecastDateInfo: {
 		fontSize: 12,
-        color: Colors.grayish,
-        textAlign: 'right',
-        marginHorizontal: 10,
-        marginTop: 3,
-        marginBottom: 10,
+		color: Colors.grayish,
+		textAlign: 'right',
+		marginHorizontal: 10,
+		marginTop: 3,
+		marginBottom: 10,
 		fontFamily: 'Overlock-Regular-Italic'
 	},
 	row: {
@@ -121,23 +125,23 @@ const styles = StyleSheet.create({
 	},
 	cellLabel: {
 		color: '#666',
-        flex: 0.5,
-        paddingRight: 10,
-        textAlign: 'right'
+		flex: 0.5,
+		paddingRight: 10,
+		textAlign: 'right'
 	},
 	cellValue: {
-        paddingLeft: 10,
+		paddingLeft: 10,
 		flex: 0.5
 	},
 	links: {
-        marginVertical: 10,
-        alignItems: 'center'
-    },
-    linlText: {
-        padding: 5,
-        fontSize: 14,
-        color: Colors.link
-    }
+		marginVertical: 10,
+		alignItems: 'center'
+	},
+	linlText: {
+		padding: 5,
+		fontSize: 14,
+		color: Colors.link
+	}
 });
 
 export default CurrentWeatherDetails;
