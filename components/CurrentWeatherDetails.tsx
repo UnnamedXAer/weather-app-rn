@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
-import { CurrentWeatherData } from '../models/CurentWeatherModel';
+import { CurrentWeatherData } from '../models/WeatherModels';
 import LocationModel from '../models/LocationModel';
 import StyledText from './UI/StyledText';
 import Colors from '../constants/Colors';
