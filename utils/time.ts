@@ -8,7 +8,7 @@ export function dateToLocalString(date: Date | string | number, format: OutputFo
 	switch (format) {
 		case 'fromNow': return d.fromNow();
 		case 'time': return d.format('HH:mm');
-		case 'fullDT':
+		case 'fullDT': return d.format('HH:mm, dddd, DD MMM YYYY');
 		default: return d.format('ddd, DD MMM YYYY, HH:mm');
 	}
 }

@@ -1,10 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-	StyleSheet,
-	View,
-	ScrollView,
-	ActivityIndicator,
-} from 'react-native';
+import { StyleSheet, View, ScrollView, ActivityIndicator } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import HeaderCart from '../components/UI/HeaderCart';
 import ErrorPanel from '../components/UI/ErrorPanel';
@@ -14,8 +9,9 @@ import Colors from '../constants/Colors';
 import StyledText from '../components/UI/StyledText';
 import { fetchForecastWeather } from '../store/actions/weather';
 import ForecastWeatherDetails from '../components/ForecastWeatherDetails';
+import NoLocationInfo from '../components/NoLocationInfo';
 
-const ForecastWeatherScreen = () => {
+const ForecastWeatherScreen = props => {
 	const dispatch = useDispatch();
 	const location = useSelector((state: RootState) => state.location.currentLocation);
 	const weatherData = useSelector(
@@ -32,11 +28,19 @@ const ForecastWeatherScreen = () => {
 		if (location) {
 			dispatch(fetchForecastWeather(location));
 		}
-    }, [location, fetchForecastWeather]);
-    
-    const imagePressHandler = (index: number) => {
-		Toast.showWithGravity(weatherData[index].description, Toast.SHORT, Toast.CENTER);
+	}, [location, fetchForecastWeather]);
+
+	const imagePressHandler = (index: number) => {
+        let description = weatherData[index].description;
+        if (description) {
+            description = description.charAt(0).toLocaleUpperCase() + description.substring(1);
+            Toast.showWithGravity(description , Toast.SHORT, Toast.CENTER);
+        }
 	};
+
+	if (!location) {
+		return <NoLocationInfo navigation={props.navigation} />;
+	}
 
 	return (
 		<ScrollView>
@@ -57,7 +61,10 @@ const ForecastWeatherScreen = () => {
 			{forecastWeatherError ? (
 				<ErrorPanel message={forecastWeatherError} showHeader />
 			) : (
-				<ForecastWeatherDetails weatherData={weatherData} imagePressed={imagePressHandler} />
+				<ForecastWeatherDetails
+					weatherData={weatherData}
+					imagePressed={imagePressHandler}
+				/>
 			)}
 		</ScrollView>
 	);
