@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, Dimensions } from 'react-native';
 import { CurrentWeatherData } from '../models/WeatherModels';
 import LocationModel from '../models/LocationModel';
 import StyledText from './UI/StyledText';
@@ -109,6 +109,9 @@ const CurrentWeatherDetails: React.FC<Props> = ({ weatherData, location, loading
 	);
 };
 
+const width = Dimensions.get('window').width;
+const fontSize = width < 320 ? 14 : width <= 360 ? 18 : 20;
+
 const styles = StyleSheet.create({
 	weatherDetails: {},
 	focrecastDateInfo: {
@@ -127,11 +130,13 @@ const styles = StyleSheet.create({
 		color: '#666',
 		flex: 0.5,
 		paddingRight: 10,
-		textAlign: 'right'
+        textAlign: 'right',
+        fontSize: fontSize
 	},
 	cellValue: {
 		paddingLeft: 10,
-		flex: 0.5
+        flex: 0.5,
+        fontSize: fontSize
 	},
 	links: {
 		marginVertical: 10,

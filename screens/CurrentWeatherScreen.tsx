@@ -6,7 +6,8 @@ import {
 	Image,
 	Text,
 	TouchableOpacity,
-	ActivityIndicator
+	ActivityIndicator,
+    Dimensions
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import { useSelector, useDispatch } from 'react-redux';
@@ -20,6 +21,7 @@ import NoLocationInfo from '../components/NoLocationInfo';
 import ErrorPanel from '../components/UI/ErrorPanel';
 import { addUnits } from '../utils/units';
 import CurrentWeatherDetails from '../components/CurrentWeatherDetails';
+import { getTemperatureColor } from '../utils/temperature';
 
 interface Props extends NavigationStackScreenProps {}
 
@@ -67,18 +69,22 @@ const CurrentWeatherScreen: React.FC<Props> = props => {
 					) : (
 						currentWeatherData && (
 							<View style={styles.weatherData}>
-								<View style={styles.weatherDataTextWrapper}>
-									<StyledText style={styles.currentTemp}>
+								<View>
+									<StyledText style={styles.currentTempText}>
 										Current Temprature:{' '}
-										<Text style={styles.tempNumber}>
+										<Text style={[styles.currentTemp, {
+											color: getTemperatureColor(
+												currentWeatherData.temperature.main
+											)
+										}]}>
 											{addUnits(
 												currentWeatherData.temperature.main
 											)}
 										</Text>
 									</StyledText>
-									<StyledText style={styles.feelsLikeTemp}>
+									<StyledText style={styles.feelsLikeTempText}>
 										Feels Like:{' '}
-										<Text style={styles.tempNumber}>
+										<Text style={styles.feelsLikeTemp}>
 											{addUnits(
 												currentWeatherData.temperature.feelsLike
 											)}
@@ -113,6 +119,9 @@ const CurrentWeatherScreen: React.FC<Props> = props => {
 	);
 };
 
+const width = Dimensions.get('window').width;
+const temperatureFontSize = width < 320 ? 32 : width < 360 ? 38 : 42;
+
 const styles = StyleSheet.create({
 	screen: {
 		flex: 1
@@ -136,11 +145,10 @@ const styles = StyleSheet.create({
 	weatherData: {
 		alignItems: 'center'
 	},
-	weatherDataTextWrapper: {},
 	weatherDataImageWrapper: {
         marginTop: 10,
 		backgroundColor: Colors.white,
-		width: '90%',
+		width: '80%',
 		justifyContent: 'center',
 		alignItems: 'center',
 		elevation: 2
@@ -149,14 +157,20 @@ const styles = StyleSheet.create({
 		minWidth: 100,
 		minHeight: 100
 	},
-	currentTemp: {
+	currentTempText: {
 		fontSize: 24
-	},
-	feelsLikeTemp: {
+    },
+    currentTemp: {
+        fontSize: temperatureFontSize,
+        fontFamily: 'Overlock-Boldest-Italic',
+        color: Colors.tomato
+    },
+	feelsLikeTempText: {
 		fontSize: 20
 	},
-	tempNumber: {
-		fontFamily: 'Overlock-Bold'
+	feelsLikeTemp: {
+        fontSize: temperatureFontSize-15,
+        fontFamily: 'Overlock-Bold'
 	}
 });
 
