@@ -2,16 +2,14 @@ import React, { useState, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { TextInput } from 'react-native-paper';
-import { NavigationStackScreenProps } from 'react-navigation-stack';
 import { fetchLocationsByPrefix, setCurrentLocation } from '../store/actions/location';
 import HeaderCart from '../components/UI/HeaderCart';
 import { RootState } from '../store/storeTypes';
 import Colors from '../constants/Colors';
 import LocationSearchResults from '../components/LocationSearchResults';
+import { createNavigationOptions } from '../Navigation/NavigationUtils';
 
-interface Props extends NavigationStackScreenProps {};
-
-const LocationScreen: React.FC<Props> = props => {
+const LocationScreen = props => {
 	const dispatch = useDispatch();
 	const searchResults = useSelector((state: RootState) => state.location.searchResults);
 	const searchError = useSelector((state: RootState) => state.location.searchError);
@@ -99,6 +97,8 @@ const LocationScreen: React.FC<Props> = props => {
 		</View>
 	);
 };
+
+LocationScreen.navigationOptions = (navData) => createNavigationOptions(navData, 'Location');
 
 const styles = StyleSheet.create({
 	locationInput: {

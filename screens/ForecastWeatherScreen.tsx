@@ -10,6 +10,7 @@ import StyledText from '../components/UI/StyledText';
 import { fetchForecastWeather } from '../store/actions/weather';
 import ForecastWeatherDetails from '../components/ForecastWeatherDetails';
 import NoLocationInfo from '../components/NoLocationInfo';
+import { createNavigationOptions } from '../Navigation/NavigationUtils';
 
 const ForecastWeatherScreen = props => {
 	const dispatch = useDispatch();
@@ -69,6 +70,8 @@ const ForecastWeatherScreen = props => {
 		</ScrollView>
 	);
 };
+
+ForecastWeatherScreen.navigationOptions = (navData) => createNavigationOptions(navData, 'Forecast Wearther');
 
 export default ForecastWeatherScreen;
 

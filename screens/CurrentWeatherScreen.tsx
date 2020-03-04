@@ -7,11 +7,10 @@ import {
 	Text,
 	TouchableOpacity,
 	ActivityIndicator,
-    Dimensions
+	Dimensions
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import { useSelector, useDispatch } from 'react-redux';
-import { NavigationStackScreenProps } from 'react-navigation-stack';
 import StyledText from '../components/UI/StyledText';
 import { RootState } from '../store/storeTypes';
 import HeaderCart from '../components/UI/HeaderCart';
@@ -22,10 +21,9 @@ import ErrorPanel from '../components/UI/ErrorPanel';
 import { addUnits } from '../utils/units';
 import CurrentWeatherDetails from '../components/CurrentWeatherDetails';
 import { getTemperatureColor } from '../utils/temperature';
+import { createNavigationOptions } from '../Navigation/NavigationUtils';
 
-interface Props extends NavigationStackScreenProps {}
-
-const CurrentWeatherScreen: React.FC<Props> = props => {
+const CurrentWeatherScreen = props => {
 	const dispatch = useDispatch();
 	const location = useSelector((state: RootState) => state.location.currentLocation);
 	const currentWeatherData = useSelector(
@@ -39,7 +37,6 @@ const CurrentWeatherScreen: React.FC<Props> = props => {
 	);
 
 	useEffect(() => {
-		console.log('about to fetch weather data');
 		if (location) {
 			dispatch(fetchCurrentWeather(location));
 		}
@@ -72,11 +69,17 @@ const CurrentWeatherScreen: React.FC<Props> = props => {
 								<View>
 									<StyledText style={styles.currentTempText}>
 										Current Temprature:{' '}
-										<Text style={[styles.currentTemp, {
-											color: getTemperatureColor(
-												currentWeatherData.temperature.main
-											)
-										}]}>
+										<Text
+											style={[
+												styles.currentTemp,
+												{
+													color: getTemperatureColor(
+														currentWeatherData.temperature
+															.main
+													)
+												}
+											]}
+										>
 											{addUnits(
 												currentWeatherData.temperature.main
 											)}
@@ -91,8 +94,11 @@ const CurrentWeatherScreen: React.FC<Props> = props => {
 										</Text>
 									</StyledText>
 								</View>
-								<TouchableOpacity style={styles.weatherDataImageWrapper} onPress={imagePressHandler}>
-									<View >
+								<TouchableOpacity
+									style={styles.weatherDataImageWrapper}
+									onPress={imagePressHandler}
+								>
+									<View>
 										<Image
 											style={styles.weatherDataImage}
 											source={{
@@ -118,6 +124,8 @@ const CurrentWeatherScreen: React.FC<Props> = props => {
 		</ScrollView>
 	);
 };
+
+CurrentWeatherScreen.navigationOptions = (navData) => createNavigationOptions(navData, 'Current Weather');
 
 const width = Dimensions.get('window').width;
 const temperatureFontSize = width < 320 ? 32 : width < 360 ? 38 : 42;
@@ -146,7 +154,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center'
 	},
 	weatherDataImageWrapper: {
-        marginTop: 10,
+		marginTop: 10,
 		backgroundColor: Colors.white,
 		width: '80%',
 		justifyContent: 'center',
@@ -159,18 +167,18 @@ const styles = StyleSheet.create({
 	},
 	currentTempText: {
 		fontSize: 24
-    },
-    currentTemp: {
-        fontSize: temperatureFontSize,
-        fontFamily: 'Overlock-Boldest-Italic',
-        color: Colors.tomato
-    },
+	},
+	currentTemp: {
+		fontSize: temperatureFontSize,
+		fontFamily: 'Overlock-Boldest-Italic',
+		color: Colors.tomato
+	},
 	feelsLikeTempText: {
 		fontSize: 20
 	},
 	feelsLikeTemp: {
-        fontSize: temperatureFontSize-15,
-        fontFamily: 'Overlock-Bold'
+		fontSize: temperatureFontSize - 15,
+		fontFamily: 'Overlock-Bold'
 	}
 });
 

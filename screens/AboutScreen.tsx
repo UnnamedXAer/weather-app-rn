@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import StyledText from '../components/UI/StyledText';
+import { createNavigationOptions } from '../Navigation/NavigationUtils';
 
 const AboutScreen = () => {
     return (
@@ -14,6 +15,8 @@ const AboutScreen = () => {
         </View>
     );
 };
+
+AboutScreen.navigationOptions = (navData) => createNavigationOptions(navData, 'About');
 
 const styles = StyleSheet.create({
     screen: {
