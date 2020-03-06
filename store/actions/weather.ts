@@ -52,9 +52,9 @@ export const fetchCurrentWeatherFail = (error) => {
 	};
 };
 
-export const fetchForecastWeather = (location) => {
-	return async dispatch => {
-		dispatch(fetchForecastWeatherStart());
+export const fetchForecastWeather = (location, fetch = true) => {
+	return async (dispatch) => {
+		dispatch(fetchForecastWeatherStart(fetch));
 
 		try {
 			const payload = {
@@ -72,31 +72,31 @@ export const fetchForecastWeather = (location) => {
 				}
 			};
 			const { data } = await axios.post('/call-api', payload);
-			dispatch(fetchForecastWeatherSuccess(data));
+			dispatch(fetchForecastWeatherSuccess(data, fetch));
 		}
 		catch (err) {
 			logReqError(err);
-			dispatch(fetchForecastWeatherFail(err));
+			dispatch(fetchForecastWeatherFail(err, fetch));
 		}
 	};
 };
 
-export const fetchForecastWeatherStart = () => {
+export const fetchForecastWeatherStart = (fetch: boolean) => {
 	return {
-		type: actionTypes.FETCH_FORECAST_WEATHER_START
+		type: fetch ? actionTypes.FETCH_FORECAST_WEATHER_START : actionTypes.REFRESH_FORECAST_WEATHER_START
 	};
 };
 
-export const fetchForecastWeatherSuccess = (payload) => {
+export const fetchForecastWeatherSuccess = (payload, fetch: boolean) => {
 	return {
-		type: actionTypes.FETCH_FORECAST_WEATHER_SUCCESS,
+		type: fetch ? actionTypes.FETCH_FORECAST_WEATHER_SUCCESS : actionTypes.REFRESH_FORECAST_WEATHER_SUCCESS,
 		payload
 	};
 };
 
-export const fetchForecastWeatherFail = (error) => {
+export const fetchForecastWeatherFail = (error, fetch: boolean) => {
 	return {
-		type: actionTypes.FETCH_FORECAST_WEATHER_FAIL,
+		type: fetch ? actionTypes.FETCH_FORECAST_WEATHER_FAIL : actionTypes.REFRESH_FORECAST_WEATHER_FAIL,
 		error
 	};
 };

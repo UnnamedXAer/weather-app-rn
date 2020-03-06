@@ -7,7 +7,9 @@ const initialState: WeatherState = {
 	currentWeatherLoading: false,
 	forecastWeather: null,
 	forecastWeatherError: null,
-	forecastWeatherLoading: false
+	forecastWeatherLoading: false,
+	forecastWeatherRefreshing: false,
+	forecastWeatherRefreshingError: null
 };
 
 const fetchCurrentWeatherStart = (state, action) => {
@@ -80,6 +82,34 @@ const fetchForecastWeatherFail = (state, action) => {
 	};
 };
 
+const refreshForecastWeatherStart = (state: WeatherState, _action): WeatherState => {
+	return {
+		...state,
+		forecastWeatherRefreshing: true,
+		forecastWeatherRefreshingError: null
+	};
+};
+
+const refreshForecastWeatherSuccess = (state: WeatherState, action): WeatherState => {
+	return {
+		...state,
+		forecastWeatherRefreshing: false,
+		forecastWeatherRefreshingError: null,
+		forecastWeather: action.payload
+	};
+};
+
+const refreshForecastWeatherFail = (state: WeatherState, action): WeatherState => {
+
+	let message = 'Sorry, could not refresh forecast weather data.';
+
+	return {
+		...state,
+		forecastWeatherRefreshing: false,
+		forecastWeatherRefreshingError: message
+	};
+};
+
 const reducer = (state = initialState, action) => {
 	switch (action.type) {
 		case actionTypes.FETCH_CURRENT_WEATHER_START: return fetchCurrentWeatherStart(state, action);
@@ -89,6 +119,10 @@ const reducer = (state = initialState, action) => {
 		case actionTypes.FETCH_FORECAST_WEATHER_START: return fetchForecastWeatherStart(state, action);
 		case actionTypes.FETCH_FORECAST_WEATHER_SUCCESS: return fetchForecastWeatherSuccess(state, action);
 		case actionTypes.FETCH_FORECAST_WEATHER_FAIL: return fetchForecastWeatherFail(state, action);
+
+		case actionTypes.REFRESH_FORECAST_WEATHER_START: return refreshForecastWeatherStart(state, action);
+		case actionTypes.REFRESH_FORECAST_WEATHER_SUCCESS: return refreshForecastWeatherSuccess(state, action);
+		case actionTypes.REFRESH_FORECAST_WEATHER_FAIL: return refreshForecastWeatherFail(state, action);
 
 		default: return state;
 	}
