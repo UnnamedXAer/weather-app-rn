@@ -26,11 +26,14 @@ const LocationScreen = props => {
 		setLocationText(text);
 
 		const trimmedValue = text.trimLeft();
-		if (trimmedValue.length > 1) {
+		if (trimmedValue.length > 0) {
 			timeoutRef.current = setTimeout(() => {
 				setShowResults(true);
 				dispatch(fetchLocationsByPrefix(trimmedValue, 0));
 			}, 700);
+		}
+		else {
+			setShowResults(false);
 		}
 	};
 
