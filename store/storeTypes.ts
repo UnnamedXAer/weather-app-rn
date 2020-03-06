@@ -1,6 +1,6 @@
 import { SearchLocationMetadata } from "../Types/CustomeTypes";
 import LocationModel from "../models/LocationModel";
-import { CurrentWeather, ForecastWeather  } from "../models/WeatherModels";
+import { CurrentWeather, ForecastWeather } from "../models/WeatherModels";
 
 export interface LocationState {
     currentLocation: null | LocationModel,
@@ -15,16 +15,20 @@ export interface LocationState {
     searchLoading: boolean,
     searchError: null | string,
 
-    redirectToCurrentWeather: boolean
+    redirectToCurrentWeather: boolean,
 };
 
 export interface WeatherState {
     currentWeather: null | CurrentWeather,
-	currentWeatherError: null | string,
-	currentWeatherLoading: boolean,
-	forecastWeather: null | ForecastWeather,
-	forecastWeatherError: null | string,
-	forecastWeatherLoading: boolean
+    currentWeatherError: null | string,
+    currentWeatherLoading: boolean,
+    
+    forecastWeather: null | ForecastWeather,
+    forecastWeatherError: null | string,
+    forecastWeatherLoading: boolean,
+
+    forecastWeatherRefreshing: boolean;
+    forecastWeatherRefreshingError: null | string,
 };
 
 export interface RootState {

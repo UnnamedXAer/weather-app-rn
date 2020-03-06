@@ -1,5 +1,11 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, View, ScrollView, ActivityIndicator } from 'react-native';
+import {
+	StyleSheet,
+	View,
+	ScrollView,
+	ActivityIndicator,
+	RefreshControl
+} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import HeaderCart from '../components/UI/HeaderCart';
 import ErrorPanel from '../components/UI/ErrorPanel';
@@ -7,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/storeTypes';
 import Colors from '../constants/Colors';
 import StyledText from '../components/UI/StyledText';
-import { fetchForecastWeather } from '../store/actions/weather';
+import { fetchForecastWeather, refreshForecastWeather } from '../store/actions/weather';
 import ForecastWeatherDetails from '../components/ForecastWeatherDetails';
 import NoLocationInfo from '../components/NoLocationInfo';
 import { createNavigationOptions } from '../Navigation/NavigationUtils';
@@ -24,6 +30,22 @@ const ForecastWeatherScreen = props => {
 	const forecastWeatherLoading = useSelector(
 		(state: RootState) => state.weather.forecastWeatherLoading
 	);
+	const forecastWeatherRefreshing = useSelector(
+		(state: RootState) => state.weather.forecastWeatherRefreshing
+	);
+	const forecastWeatherRefreshingError = useSelector(
+		(state: RootState) => state.weather.forecastWeatherRefreshingError
+	);
+
+	useEffect(() => {
+		if (forecastWeatherRefreshingError) {
+			Toast.showWithGravity(
+				forecastWeatherRefreshingError,
+				Toast.SHORT,
+				Toast.CENTER
+			);
+		}
+	}, [forecastWeatherRefreshingError]);
 
 	useEffect(() => {
 		if (location) {
@@ -32,11 +54,18 @@ const ForecastWeatherScreen = props => {
 	}, [location, fetchForecastWeather]);
 
 	const imagePressHandler = (index: number) => {
-        let description = weatherData[index].description;
-        if (description) {
-            description = description.charAt(0).toLocaleUpperCase() + description.substring(1);
-            Toast.showWithGravity(description , Toast.SHORT, Toast.CENTER);
-        }
+		let description = weatherData[index].description;
+		if (description) {
+			description =
+				description.charAt(0).toLocaleUpperCase() + description.substring(1);
+			Toast.showWithGravity(description, Toast.SHORT, Toast.CENTER);
+		}
+	};
+
+	const refreshHandler = () => {
+		if (!forecastWeatherRefreshing && location && !forecastWeatherLoading) {
+			dispatch(refreshForecastWeather(location, false));
+		}
 	};
 
 	if (!location) {
@@ -44,7 +73,17 @@ const ForecastWeatherScreen = props => {
 	}
 
 	return (
-		<ScrollView>
+		<ScrollView
+			refreshControl={
+				location &&
+				!forecastWeatherLoading && (
+					<RefreshControl
+						refreshing={forecastWeatherRefreshing}
+						onRefresh={refreshHandler}
+					/>
+				)
+			}
+		>
 			<HeaderCart>
 				<View style={styles.weather}>
 					<StyledText style={styles.locationName}>
@@ -71,7 +110,8 @@ const ForecastWeatherScreen = props => {
 	);
 };
 
-ForecastWeatherScreen.navigationOptions = (navData) => createNavigationOptions(navData, 'Forecast Wearther');
+ForecastWeatherScreen.navigationOptions = navData =>
+	createNavigationOptions(navData, 'Forecast Wearther');
 
 export default ForecastWeatherScreen;
 
