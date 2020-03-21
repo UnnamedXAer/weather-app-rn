@@ -18,7 +18,7 @@ import Toast from 'react-native-simple-toast';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import CustomHeaderButton from '../components/UI/CustomHeaderButton';
 
-const LocationScreen = props => {
+const FindLocationScreen = props => {
 	const dispatch = useDispatch();
 	const searchResults = useSelector((state: RootState) => state.location.searchResults);
 	const searchError = useSelector((state: RootState) => state.location.searchError);
@@ -150,15 +150,11 @@ const LocationScreen = props => {
 	);
 };
 
-LocationScreen.navigationOptions = navData =>
-	createNavigationOptions(navData, 'Location');
-
-LocationScreen.navigationOptions = navData => {
+FindLocationScreen.navigationOptions = navData => {
 	const icon = 'gps-fixed';
 	const onGpsPress = navData.navigation.getParam('gpsPressed');
 	const loading = navData.navigation.getParam('gpsLoading');
 	return {
-		...createNavigationOptions(navData, 'Location'),
 		headerRight: () => {
 			return loading ? (
 				<View style={styles.gpsLoading}>
@@ -197,4 +193,4 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default LocationScreen;
+export default FindLocationScreen;

@@ -10,14 +10,16 @@ import {
 	MaterialCommunityIcons,
 	Ionicons
 } from '@expo/vector-icons';
-import LocationScreen from '../screens/LocationScreen';
+import FindLocationScreen from '../screens/FindLocationScreen';
 import CurrentWeatherScreen from '../screens/CurrentWeatherScreen';
 import ForecastWeatherScreen from '../screens/ForecastWeatherScreen';
 import AboutScreen from '../screens/AboutScreen';
 import Colors from '../constants/Colors';
 import StyledText from '../components/UI/StyledText';
+import LocationsScreen from '../screens/LocationsScreen';
 
 const defaulStacktNavigationOptions: NavigationStackOptions = {
+	headerTintColor: Colors.secondary,
 	headerStyle: {
 		backgroundColor: Colors.primary
 	},
@@ -28,10 +30,13 @@ const defaulStacktNavigationOptions: NavigationStackOptions = {
 	}
 };
 
-const LocationStackNavigator = createStackNavigator(
+const LocationsStackNavigator = createStackNavigator(
 	{
-		Location: {
-			screen: LocationScreen
+		Locations: {
+			screen: LocationsScreen
+		},
+		FindLocation: {
+			screen: FindLocationScreen
 		}
 	},
 	{
@@ -68,8 +73,8 @@ const AboutStackNavigator = createStackNavigator(
 
 const BottomTabNavigator = createMaterialBottomTabNavigator(
 	{
-		Location: {
-			screen: LocationStackNavigator,
+		Locations: {
+			screen: LocationsStackNavigator,
 			navigationOptions: {
 				tabBarColor: '#00009C',
 				tabBarLabel: (

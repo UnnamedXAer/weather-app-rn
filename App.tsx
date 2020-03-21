@@ -1,9 +1,22 @@
 import React, { useState } from 'react';
 import * as Font from 'expo-font';
-import { AppLoading } from 'expo';
+import { AppLoading, Asset } from 'expo';
 import { Provider } from 'react-redux';
 import store from './store/store';
 import AppNavigator from './Navigation/AppNavigator';
+import DataAccess from './data/db';
+
+const initilazeActions = async () => {
+	return Promise.all([fetchFonts(), initializeDatabase()])
+		.then(() => Promise.resolve())
+		.catch(err => Promise.reject(err));
+};
+
+const initializeDatabase = () =>
+	new DataAccess()
+		.initDb()
+		.then(() => console.log('db connected'))
+		.catch(err => console.log('db connection err: ', err));
 
 const fetchFonts = () => {
 	return Font.loadAsync({
@@ -21,10 +34,13 @@ export default function App() {
 
 	if (!fontLoaded) {
 		return (
-			<AppLoading startAsync={fetchFonts} onFinish={() => setFontLoaded(true)} />
+			<AppLoading
+				startAsync={initilazeActions}
+				onFinish={() => setFontLoaded(true)}
+				onError={err => console.log('AppLoading error: ', err.message)}
+			/>
 		);
 	}
-
 	return (
 		<Provider store={store}>
 			<AppNavigator />
