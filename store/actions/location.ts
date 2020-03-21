@@ -1,7 +1,5 @@
 import axios, { logReqError } from '../../axios/axios';
 import * as actionTypes from './actionTypes';
-import { Action } from 'redux';
-import { AxiosResponse, AxiosError } from 'axios';
 import { Coords } from '../../Types/CustomeTypes';
 
 export const setCurrentLocation = (location) => {
@@ -11,12 +9,12 @@ export const setCurrentLocation = (location) => {
 	};
 };
 
-export const setRedirectToCurrentWeather = (shouldRedirect: boolean) => {
-	return {
-		type: actionTypes.SET_REDIRECT_TO_CURRENT_WEATHER,
-		shouldRedirect
-	};
-};
+// export const setRedirectToCurrentWeather = (shouldRedirect: boolean) => {
+// 	return {
+// 		type: actionTypes.SET_REDIRECT_TO_CURRENT_WEATHER,
+// 		shouldRedirect
+// 	};
+// };
 
 export const fetchLocationsByPrefix = (prefix:string, offset: number) => {
 	return async (dispatch) => {
@@ -71,7 +69,7 @@ export const fetchLocationByCoords = ({ latitude, longitude }: Coords) => {
 			};
 			const { data } = await axios.post('/call-api', payload);
 			dispatch(fetchLocationByCoordsSuccess(data));
-			dispatch(setRedirectToCurrentWeather(true));
+			// dispatch(setRedirectToCurrentWeather(true));
 		}
 		catch (err) {
 			logReqError(err);

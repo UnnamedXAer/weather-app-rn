@@ -14,8 +14,6 @@ export interface LocationState {
     searchMetadata: SearchLocationMetadata | {},
     searchLoading: boolean,
     searchError: null | string,
-
-    redirectToCurrentWeather: boolean,
 };
 
 export interface WeatherState {

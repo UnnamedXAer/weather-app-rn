@@ -15,8 +15,6 @@ const initialState: LocationState = {
 	searchMetadata: {},
 	searchLoading: false,
 	searchError: null,
-
-	redirectToCurrentWeather: false
 };
 
 const setCurrentLocation = (state, action) => {
@@ -26,20 +24,10 @@ const setCurrentLocation = (state, action) => {
 	};
 };
 
-const setRedirectToCurrentWeather = (state, action) => {
-	return {
-		...state,
-		redirectToCurrentWeather: action.shouldRedirect
-	};
-};
-
 const fetchLocationByCoordsStart = (state, action) => {
 	return {
 		...state,
-		currentLocation: null,
-		geolocationLoading: true,
-		geolocationError: null,
-		geolocationDisabled: false
+		reversGeocodingLoading: true
 	};
 };
 
@@ -47,9 +35,6 @@ const fetchLocationByCoordsSuccess = (state, action) => {
 	return {
 		...state,
 		currentLocation: action.payload,
-		geolocationLoading: false,
-		geolocationError: null,
-		geolocationDisabled: false
 	};
 };
 
@@ -62,11 +47,7 @@ const fetchLocationByCoordsFail = (state, action) => {
 	}
 
 	return {
-		...state,
-		currentLocation: null,
-		geolocationLoading: false,
-		geolocationError: message,
-		geolocationDisabled: true
+		state,
 	};
 };
 
@@ -113,7 +94,6 @@ const fetchLocationsByPrefixFail = (state, action) => {
 const reducer = (state = initialState, action) => {
 	switch (action.type) {
 		case actionTypes.SET_CURRENT_LOCATION: return setCurrentLocation(state, action);
-		case actionTypes.SET_REDIRECT_TO_CURRENT_WEATHER: return setRedirectToCurrentWeather(state, action);
 
 		case actionTypes.FETCH_LOCATIONS_BY_PREFIX_START: return fetchLocationsByPrefixStart(state, action);
 		case actionTypes.FETCH_LOCATIONS_BY_PREFIX_SUCCESS: return fetchLocationsByPrefixSuccess(state, action);
