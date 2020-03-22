@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { StyleSheet, View, Text, Alert, ActivityIndicator, Platform } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, Platform } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { TextInput } from 'react-native-paper';
 import {
 	fetchLocationsByPrefix,
-	setCurrentLocation,
 	fetchLocationByCoords,
 	addLocation
 } from '../store/actions/location';
@@ -12,7 +11,6 @@ import HeaderCart from '../components/UI/HeaderCart';
 import { RootState } from '../store/storeTypes';
 import Colors from '../constants/Colors';
 import LocationSearchResults from '../components/LocationSearchResults';
-import { createNavigationOptions } from '../Navigation/NavigationUtils';
 import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
 import Toast from 'react-native-simple-toast';
@@ -32,7 +30,6 @@ const FindLocationScreen = props => {
 	const timeoutRef = useRef(null);
 
 	const { navigation } = props;
-	console.log('rerendered');
 	useEffect(() => {
 		navigation.setParams({
 			gpsLoading
@@ -55,10 +52,13 @@ const FindLocationScreen = props => {
 		}
 	};
 
-	const selectLocationHandler = (index: number) => {
+	const selectLocationHandler = async (index: number) => {
 		const location = searchResults[index];
-		dispatch(addLocation(location));
-		// navigation.navigate({ routeName: 'CurrentWeather' });
+		try {
+			await dispatch(addLocation(location));
+		} catch (err) {
+			Toast.show('Sorry, could not select location. Please try again.');
+		}
 		navigation.goBack();
 	};
 
@@ -91,7 +91,6 @@ const FindLocationScreen = props => {
 				mayShowUserSettingsDialog: true
 			});
 			await dispatch(fetchLocationByCoords({ ...location.coords }));
-			// navigation.navigate({ routeName: 'CurrentWeather' });
 			navigation.goBack();
 		} catch (err) {
 			Toast.show('Sorry, could not fetch location.');

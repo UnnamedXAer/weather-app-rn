@@ -6,6 +6,7 @@ import { SearchLocationMetadata } from '../../Types/CustomeTypes';
 
 const initialState: LocationState = {
 	locations: [],
+	highlightedLocation: null,
 	currentLocation: null,
 
 	geolocationDisabled: false,
@@ -75,25 +76,43 @@ const fetchLocationsByPrefixFail
 const addLocation: SimpleReducer<LocationState, LocationModel> = (state, action) => {
 	return {
 		...state,
-		locations: state.locations.concat(action.payload)
+		locations: state.locations.concat(action.payload),
 	};
 };
 
 const removeLocation: SimpleReducer<LocationState, number> = (state, action) => {
 	const id = action.payload;
-	const updatedLocations = state.locations.filter(x => x.id === id);
+	const updatedLocations = state.locations.filter(x => x.id !== id);
 	return {
 		...state,
 		locations: updatedLocations
 	};
 };
 
+const setHighlightLocation: SimpleReducer<LocationState, number> = (state, action) => {
+	return {
+		...state,
+		highlightedLocation: action.payload
+	};
+};
+
+const setLocations: SimpleReducer<LocationState, LocationModel[]> = (state, action) => {
+	return {
+		...state,
+		locations: action.payload
+	};
+};
+
 const reducer: AppReducer<LocationState, string> = (state = initialState, action) => {
 	switch (action.type) {
+		case actionTypes.SET_LOCATIONS:
+			return setLocations(state, action);
 		case actionTypes.SET_CURRENT_LOCATION:
 			return setCurrentLocation(state, action);
 		case actionTypes.ADD_LOCATION:
 			return addLocation(state, action);
+		case actionTypes.SET_HIGHLIGHTED_LOCATION:
+			return setHighlightLocation(state, action);
 		case actionTypes.REMOVE_LOCATION:
 			return removeLocation(state, action);
 

@@ -12,6 +12,11 @@ type LocationRow = {
     longitude: number,
 };
 
+type SettingsRow = {
+    id: number,
+    currentLocation: null | number;
+}
+
 class DataAccess {
     private db: SQLite.WebSQLDatabase;
     static instance: DataAccess;
@@ -34,7 +39,7 @@ class DataAccess {
                     [],
                     (_, results) => {
                         const locations: LocationModel[] = [];
-    
+
                         for (let i = 0; i < results.rows.length; i++) {
                             const row = results.rows.item(i) as LocationRow;
                             locations.push(new LocationModel({
@@ -47,7 +52,7 @@ class DataAccess {
                                 coords: { latitude: row.latitude, longitude: row.longitude },
                             }));
                         }
-    
+
                         resolve(locations);
                     },
                     (_, err) => {
@@ -63,7 +68,7 @@ class DataAccess {
     deleteLocation = (id: number) => {
         return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
             this.db.transaction(trx => {
-                trx.executeSql('DELETE FROM location where id = ?',
+                trx.executeSql('DELETE FROM locations where id = ?',
                     [id],
                     (_, results) => resolve(results),
                     (_, err) => {
@@ -77,9 +82,9 @@ class DataAccess {
     };
 
     addLocation = (location: LocationModel) => {
-        return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
+        return new Promise<number>((resolve, reject) => {
             this.db.transaction(trx => {
-                trx.executeSql(`INSERT INTO location (
+                trx.executeSql(`INSERT INTO locations (
                         city, country, countryCode, postalCode, region, latitude, longitude
                     ) VALUES (? ,?, ?, ?, ?, ? ,?)`,
                     [
@@ -91,7 +96,41 @@ class DataAccess {
                         location.coords.latitude,
                         location.coords.longitude
                     ],
-                    (_, results) => resolve(results),
+                    (_, results) => resolve(results.insertId),
+                    (_, err) => {
+                        reject(err);
+                        return false;
+                    });
+            }, (err) => {
+                reject(err);
+            });
+        });
+    };
+
+    updateCurrentLocation = (id: number) => {
+        return new Promise<number>((resolve, reject) => {
+            this.db.transaction(trx => {
+                trx.executeSql(`UPDATE settings SET currentLocation = ? WHERE id = 1`,
+                    [
+                        id
+                    ],
+                    (_, results) => resolve(results.insertId),
+                    (_, err) => {
+                        reject(err);
+                        return false;
+                    });
+            }, (err) => {
+                reject(err);
+            });
+        });
+    };
+
+    getCurrentLocation = () => {
+        return new Promise<number | null>((resolve, reject) => {
+            this.db.transaction(trx => {
+                trx.executeSql(`SELECT * FROM settings`,
+                    [],
+                    (_, results) => resolve((results.rows.item(0) as SettingsRow).currentLocation),
                     (_, err) => {
                         reject(err);
                         return false;
@@ -103,32 +142,29 @@ class DataAccess {
     };
 
     initDb = () => {
-        return new Promise<SQLite.SQLResultSet>((resolve, reject) => {
-            this.db.transaction((trx => {
-                trx.executeSql(`CREATE TABLE IF NOT EXISTS locations (
-                    id INTEGER PRIMARY KEY NOT NULL,
-                    city TEXT NOT NULL,
-                    country TEXT,
-                    countryCode TEXT,
-                    postalCode TEXT,
-                    region TEXT,
-                    latitude REAL NOT NULL,
-                    longitude REAL NOT NULL);
+        return new Promise<void>((resolve, reject) => {
+            this.db.transaction(
+                trx => {
+                    trx.executeSql(`CREATE TABLE IF NOT EXISTS locations (
+                        id INTEGER PRIMARY KEY NOT NULL,
+                        city TEXT NOT NULL,
+                        country TEXT,
+                        countryCode TEXT,
+                        postalCode TEXT,
+                        region TEXT,
+                        latitude REAL NOT NULL,
+                        longitude REAL NOT NULL);`);
 
-                    CREATE TABLE IF NOT EXISTS settings (
+                    trx.executeSql(`CREATE TABLE IF NOT EXISTS settings (
                         id INTEGER PRIMARY KEY NOT NULL,
                         currentLocation INTEGER,
-                        FOREIGN KEY(currentLocation) REFERENCES locations(id)
-                    );
-                    `,
-                    [],
-                    (_, results) => resolve(results),
-                    (_, err) => {
-                        reject(err);
-                        return false;
-                    }
-                )
-            }));
+                        FOREIGN KEY(currentLocation) REFERENCES locations(id));`);
+
+                    trx.executeSql(`INSERT OR REPLACE INTO settings (id, currentLocation) 
+                        VALUES (1, (SELECT currentLocation from settings where id = 1))`);
+                },
+                err => reject(err),
+                () => resolve());
         });
     };
 }

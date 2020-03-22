@@ -85,7 +85,7 @@ const BottomTabNavigator = createMaterialBottomTabNavigator(
 							color: Colors.white
 						}}
 					>
-						Location
+						Locations
 					</StyledText>
 				),
 				tabBarIcon: tabInfo => (

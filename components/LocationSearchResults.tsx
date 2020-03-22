@@ -7,11 +7,11 @@ import {
 	ActivityIndicator
 } from 'react-native';
 import StyledText from './UI/StyledText';
-import TouchableComponent from './UI/TouchableComponent';
 import LocationModel from '../models/LocationModel';
 import Colors from '../constants/Colors';
 import { SearchLocationMetadata } from '../Types/CustomeTypes';
 import ErrorPanel from './UI/ErrorPanel';
+import LocationResultItem from './LocationResultItem';
 
 const getPages = (offsetInfo: SearchLocationMetadata) => {
 	const { currentOffset, totalCount } = offsetInfo;
@@ -97,19 +97,11 @@ const LocationSearchResults = ({
 					<>
 						{show &&
 							locations.map((city: LocationModel, i: number) => (
-								<TouchableComponent
+								<LocationResultItem
 									key={i}
-									onPress={() => selectLocation(i)}
-								>
-									<View style={styles.row}>
-										<StyledText style={styles.city}>
-											{city.city}, ({city.countryCode})
-										</StyledText>
-										<StyledText style={styles.country}>
-											{city.country} ({city.region})
-										</StyledText>
-									</View>
-								</TouchableComponent>
+									location={city}
+									onSelect={() => selectLocation(i)}
+								/>
 							))}
 
 						<View style={styles.footer}>
@@ -142,20 +134,6 @@ const styles = StyleSheet.create({
 	},
 	spinner: {
 		paddingVertical: 30
-	},
-	row: {
-		paddingVertical: 4,
-		alignItems: 'center',
-		marginHorizontal: 15,
-		borderBottomColor: Colors.primary,
-		borderBottomWidth: 1
-	},
-	city: {
-		fontSize: 20,
-		textAlign: 'center'
-	},
-	country: {
-		textAlign: 'center'
 	},
 	footer: {
 		marginVertical: 5,

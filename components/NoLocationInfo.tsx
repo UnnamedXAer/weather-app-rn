@@ -16,7 +16,7 @@ const NoLocationInfo: React.FC<{
 				<Text
 					style={styles.locationScreenLink}
 					onPress={() => {
-						navigation.navigate('Location');
+						navigation.navigate('Locations');
 					}}
 				>
 					Location

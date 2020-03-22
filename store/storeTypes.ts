@@ -4,7 +4,8 @@ import { CurrentWeather, ForecastWeather } from "../models/WeatherModels";
 import { Action } from "redux";
 
 export interface LocationState {
-    locations: LocationModel[]
+    locations: LocationModel[],
+    highlightedLocation: number | null,
     currentLocation: null | LocationModel,
 
     geolocationDisabled: boolean,

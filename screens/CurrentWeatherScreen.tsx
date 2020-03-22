@@ -125,7 +125,8 @@ const CurrentWeatherScreen = props => {
 	);
 };
 
-CurrentWeatherScreen.navigationOptions = (navData) => createNavigationOptions(navData, 'Current Weather');
+CurrentWeatherScreen.navigationOptions = navData =>
+	createNavigationOptions(navData, 'Current Weather');
 
 const width = Dimensions.get('window').width;
 const temperatureFontSize = width < 320 ? 32 : width < 360 ? 38 : 42;
