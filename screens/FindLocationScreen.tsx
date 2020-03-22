@@ -5,7 +5,8 @@ import { TextInput } from 'react-native-paper';
 import {
 	fetchLocationsByPrefix,
 	setCurrentLocation,
-	fetchLocationByCoords
+	fetchLocationByCoords,
+	addLocation
 } from '../store/actions/location';
 import HeaderCart from '../components/UI/HeaderCart';
 import { RootState } from '../store/storeTypes';
@@ -56,8 +57,9 @@ const FindLocationScreen = props => {
 
 	const selectLocationHandler = (index: number) => {
 		const location = searchResults[index];
-		dispatch(setCurrentLocation(location));
-		navigation.navigate({ routeName: 'CurrentWeather' });
+		dispatch(addLocation(location));
+		// navigation.navigate({ routeName: 'CurrentWeather' });
+		navigation.goBack();
 	};
 
 	const submitHundler = () => {
@@ -89,8 +91,8 @@ const FindLocationScreen = props => {
 				mayShowUserSettingsDialog: true
 			});
 			await dispatch(fetchLocationByCoords({ ...location.coords }));
-			navigation.navigate({ routeName: 'CurrentWeather' });
-			console.log(location);
+			// navigation.navigate({ routeName: 'CurrentWeather' });
+			navigation.goBack();
 		} catch (err) {
 			Toast.show('Sorry, could not fetch location.');
 		}

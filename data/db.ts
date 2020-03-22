@@ -1,6 +1,5 @@
 import * as SQLite from 'expo-sqlite';
 import LocationModel from '../models/LocationModel';
-// const db = SQLite.openDatabase('TeKam-WeatherApp');
 
 type LocationRow = {
     id: number,
@@ -114,7 +113,14 @@ class DataAccess {
                     postalCode TEXT,
                     region TEXT,
                     latitude REAL NOT NULL,
-                    longitude REAL NOT NULL);`,
+                    longitude REAL NOT NULL);
+
+                    CREATE TABLE IF NOT EXISTS settings (
+                        id INTEGER PRIMARY KEY NOT NULL,
+                        currentLocation INTEGER,
+                        FOREIGN KEY(currentLocation) REFERENCES locations(id)
+                    );
+                    `,
                     [],
                     (_, results) => resolve(results),
                     (_, err) => {

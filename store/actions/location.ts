@@ -1,22 +1,25 @@
 import axios, { logReqError } from '../../axios/axios';
 import * as actionTypes from './actionTypes';
 import { Coords } from '../../Types/CustomeTypes';
+import { AxiosError } from 'axios';
+import { ThunkAction } from 'redux-thunk';
+import { RootState, StoreAction, LocationState } from '../storeTypes';
+import LocationModel from '../../models/LocationModel';
 
-export const setCurrentLocation = (location) => {
+export const setCurrentLocation = (location: LocationModel)
+	: StoreAction<LocationModel> => {
 	return {
 		type: actionTypes.SET_CURRENT_LOCATION,
-		location
+		payload: location
 	};
 };
 
-// export const setRedirectToCurrentWeather = (shouldRedirect: boolean) => {
-// 	return {
-// 		type: actionTypes.SET_REDIRECT_TO_CURRENT_WEATHER,
-// 		shouldRedirect
-// 	};
-// };
-
-export const fetchLocationsByPrefix = (prefix:string, offset: number) => {
+export const fetchLocationsByPrefix = (prefix: string, offset: number)
+	: ThunkAction<
+		Promise<void>,
+		RootState, any,
+		StoreAction<LocationModel[] | AxiosError>
+	> => {
 	return async (dispatch) => {
 		dispatch(fetchLocationsByPrefixStart());
 
@@ -28,7 +31,10 @@ export const fetchLocationsByPrefix = (prefix:string, offset: number) => {
 					offset
 				}
 			};
-			const { data } = await axios.post('/call-api', payload);
+			const { data } = await axios.post(
+				'/call-api',
+				payload
+			) as { data: LocationModel[] };
 			dispatch(fetchLocationsByPrefixSuccess(data));
 		}
 		catch (err) {
@@ -38,62 +44,59 @@ export const fetchLocationsByPrefix = (prefix:string, offset: number) => {
 	};
 };
 
-export const fetchLocationsByPrefixStart = () => {
+export const fetchLocationsByPrefixStart = (): StoreAction<undefined, string> => {
 	return {
 		type: actionTypes.FETCH_LOCATIONS_BY_PREFIX_START
 	};
 };
 
-export const fetchLocationsByPrefixSuccess = (payload) => {
+export const fetchLocationsByPrefixSuccess = (locations: LocationModel[])
+	: StoreAction<LocationModel[]> => {
 	return {
 		type: actionTypes.FETCH_LOCATIONS_BY_PREFIX_SUCCESS,
-		payload
+		payload: locations
 	};
 };
 
-export const fetchLocationsByPrefixFail = (error: string) => {
+export const fetchLocationsByPrefixFail = (error: AxiosError)
+	: StoreAction<AxiosError> => {
 	return {
 		type: actionTypes.FETCH_LOCATIONS_BY_PREFIX_FAIL,
-		error
+		payload: error
 	};
 };
 
-export const fetchLocationByCoords = ({ latitude, longitude }: Coords) => {
+export const fetchLocationByCoords = ({ latitude, longitude }: Coords)
+	: ThunkAction<Promise<void>, LocationState, any, StoreAction<LocationModel>> => {
 	return async dispatch => {
-		dispatch(fetchLocationByCoordsStart());
-
+		const payload = {
+			provider: 'mapquestapi',
+			queryParams: { latitude, longitude }
+		};
 		try {
-			const payload = {
-				provider: 'mapquestapi',
-				queryParams: { latitude, longitude }
-			};
-			const { data } = await axios.post('/call-api', payload);
-			dispatch(fetchLocationByCoordsSuccess(data));
-			// dispatch(setRedirectToCurrentWeather(true));
+			const { data }: { data: LocationModel } = await axios.post(
+				'/call-api',
+				payload
+			);
+			dispatch(addLocation(data));
 		}
 		catch (err) {
 			logReqError(err);
-			dispatch(fetchLocationByCoordsFail(err));
+			throw err;
 		}
 	};
 };
 
-export const fetchLocationByCoordsStart = () => {
+export const addLocation = (location: LocationModel): StoreAction<LocationModel> => {
 	return {
-		type: actionTypes.FETCH_LOCATION_BY_COORDS_START
+		type: actionTypes.ADD_LOCATION,
+		payload: location
 	};
 };
 
-export const fetchLocationByCoordsSuccess = (payload) => {
+export const removeLocation = (id: number): StoreAction<number> => {
 	return {
-		type: actionTypes.FETCH_LOCATION_BY_COORDS_SUCCESS,
-		payload
-	};
-};
-
-export const fetchLocationByCoordsFail = (error: string) => {
-	return {
-		type: actionTypes.FETCH_LOCATION_BY_COORDS_FAIL,
-		error
+		type: actionTypes.ADD_LOCATION,
+		payload: id
 	};
 };
