@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import { createNavigationOptions } from '../Navigation/NavigationUtils';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/storeTypes';
@@ -9,13 +9,16 @@ import LocationItem from '../components/LocationItem';
 import {
 	setCurrentLocation,
 	getSavedLocations,
-	removeLocation
+	removeLocation,
+	fetchLocationByCoords
 } from '../store/actions/location';
 import { Button, Colors as PaperColors, Dialog } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 import ErrorPanel from '../components/UI/ErrorPanel';
-import SimpleToast from 'react-native-simple-toast';
+import Toast from 'react-native-simple-toast';
+import * as Permissions from 'expo-permissions';
+import * as Location from 'expo-location';
 
 interface Props {}
 
@@ -26,6 +29,7 @@ interface StatelessCmp extends React.FC<Props & NavigationStackScreenProps> {
 const LocationsScreen: StatelessCmp = props => {
 	const dispatch = useDispatch();
 	const locations = useSelector((state: RootState) => state.location.locations);
+	const [gpsLoading, setGpsLoading] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string>(null);
 	const [locationsLoadingState, setLocationsLoadingState] = useState<{
@@ -67,9 +71,34 @@ const LocationsScreen: StatelessCmp = props => {
 		try {
 			await dispatch(removeLocation(id));
 		} catch (err) {
-			SimpleToast.show('Sorry, could not remove location due to internal error.');
+			Toast.show('Sorry, could not remove location due to internal error.');
 		}
 		setLocationsLoadingState(prevState => ({ ...prevState, [id]: false }));
+	};
+
+	const getCurrentPositionHandler = async () => {
+		const { granted } = await Permissions.getAsync(Permissions.LOCATION);
+
+		if (!granted) {
+			const { granted } = await Permissions.askAsync(Permissions.LOCATION);
+
+			if (!granted) {
+				return Toast.show('You need to grant permission to access location.');
+			}
+		}
+		setGpsLoading(true);
+
+		try {
+			const location = await Location.getCurrentPositionAsync({
+				timeout: 5000,
+				mayShowUserSettingsDialog: true
+			});
+			await dispatch(fetchLocationByCoords({ ...location.coords }));
+			props.navigation.goBack();
+		} catch (err) {
+			Toast.show('Sorry, could not fetch location.');
+		}
+		setGpsLoading(false);
 	};
 
 	let contetn = <ActivityIndicator size="large" color={Colors.primary} />;
@@ -95,18 +124,28 @@ const LocationsScreen: StatelessCmp = props => {
 		<View style={styles.screen}>
 			{<ScrollView>{contetn}</ScrollView>}
 			<View style={styles.locationActions}>
-				<Button
-					style={styles.locationAction}
-					color={Colors.white}
-					onPress={() => {}}
-				>
-					<MaterialIcons
-						name="gps-fixed"
-						title="GPS"
+				{gpsLoading ? (
+					<View style={styles.locationAction}>
+						<ActivityIndicator
+							style={styles.locationAction}
+							size="small"
+							color={Colors.white}
+						/>
+					</View>
+				) : (
+					<Button
+						style={styles.locationAction}
 						color={Colors.white}
-						size={20}
-					/>
-				</Button>
+						onPress={getCurrentPositionHandler}
+					>
+						<MaterialIcons
+							name="gps-fixed"
+							title="GPS"
+							color={Colors.white}
+							size={20}
+						/>
+					</Button>
+				)}
 				<Button
 					style={styles.locationAction}
 					color={Colors.white}
@@ -142,13 +181,15 @@ const styles = StyleSheet.create({
 	locationActions: {
 		flexDirection: 'row',
 		justifyContent: 'space-evenly',
+		alignItems: 'center',
 		backgroundColor: PaperColors.blue500
 	},
 	locationAction: {
-		flex: 0.5,
+		width: '50%',
 		paddingVertical: 3,
 		borderRadius: 0,
-		alignItems: 'center'
+		alignItems: 'center',
+		justifyContent: 'center'
 	}
 });
 

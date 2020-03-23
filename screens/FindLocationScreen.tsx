@@ -23,7 +23,7 @@ const FindLocationScreen = props => {
 	const searchError = useSelector((state: RootState) => state.location.searchError);
 	const searchLoading = useSelector((state: RootState) => state.location.searchLoading);
 	const offsetInfo = useSelector((state: RootState) => state.location.searchMetadata);
-	const [locationText, setLocationText] = useState('T');
+	const [locationText, setLocationText] = useState('');
 	const [showResults, setShowResults] = useState(false);
 	const [gpsLoading, setGpsLoading] = useState(false);
 
