@@ -36,7 +36,10 @@ const LocationsStackNavigator = createStackNavigator(
 			screen: LocationsScreen
 		},
 		FindLocation: {
-			screen: FindLocationScreen
+			screen: FindLocationScreen,
+			navigationOptions: {
+				title: 'Find Location'
+			}
 		}
 	},
 	{
