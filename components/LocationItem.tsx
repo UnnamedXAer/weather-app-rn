@@ -10,17 +10,24 @@ interface Props {
 	onSelect: () => void;
 	onLongPress: () => void;
 	loading: boolean;
+	highlighted: boolean;
 }
 
 interface StatelessCmp extends React.FC<Props> {}
 
-const LocationItem: StatelessCmp = ({ location, onSelect, onLongPress, loading }) => {
+const LocationItem: StatelessCmp = ({
+	location,
+	onSelect,
+	onLongPress,
+	loading,
+	highlighted
+}) => {
 	return (
 		<TouchableComponent
 			onPress={!loading ? onSelect : void 0}
 			onLongPress={!loading ? onLongPress : void 0}
 		>
-			<View style={styles.row}>
+			<View style={[styles.row, highlighted ? styles.highlighted : {}]}>
 				<View>
 					<StyledText style={styles.city}>
 						{location.city}, ({location.countryCode})
@@ -44,9 +51,13 @@ const styles = StyleSheet.create({
 	row: {
 		flexDirection: 'row',
 		paddingVertical: 4,
-		marginHorizontal: 15,
+		paddingHorizontal: 5,
+		marginHorizontal: 10,
 		borderBottomColor: Colors.primary,
 		borderBottomWidth: 1
+	},
+	highlighted: {
+		backgroundColor: Colors.secondary
 	},
 	city: {
 		fontSize: 20

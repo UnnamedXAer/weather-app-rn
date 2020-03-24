@@ -89,7 +89,7 @@ const removeLocation: SimpleReducer<LocationState, number> = (state, action) => 
 	};
 };
 
-const setHighlightLocation: SimpleReducer<LocationState, number> = (state, action) => {
+const setHighlightLocation: SimpleReducer<LocationState, null | number> = (state, action) => {
 	return {
 		...state,
 		highlightedLocation: action.payload

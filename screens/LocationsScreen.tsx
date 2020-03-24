@@ -10,7 +10,8 @@ import {
 	setCurrentLocation,
 	getSavedLocations,
 	removeLocation,
-	fetchLocationByCoords
+	fetchLocationByCoords,
+	setHighlightedLocation
 } from '../store/actions/location';
 import { Button, Colors as PaperColors, Dialog } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -29,6 +30,9 @@ interface StatelessCmp extends React.FC<Props & NavigationStackScreenProps> {
 const LocationsScreen: StatelessCmp = props => {
 	const dispatch = useDispatch();
 	const locations = useSelector((state: RootState) => state.location.locations);
+	const highlightedLocation = useSelector(
+		(state: RootState) => state.location.highlightedLocation
+	);
 	const [gpsLoading, setGpsLoading] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string>(null);
@@ -36,6 +40,14 @@ const LocationsScreen: StatelessCmp = props => {
 		[key: number]: boolean;
 	}>({});
 	const [dialogLocationId, setDialogLocationId] = useState<number>(null);
+
+	useEffect(() => {
+		if (highlightedLocation !== null) {
+			setTimeout(() => {
+				dispatch(setHighlightedLocation(null));
+			}, 700);
+		}
+	}, [highlightedLocation]);
 
 	useEffect(() => {
 		const loadLocations = async () => {
@@ -111,6 +123,7 @@ const LocationsScreen: StatelessCmp = props => {
 					<LocationItem
 						key={loc.id}
 						location={loc}
+						highlighted={highlightedLocation === loc.id}
 						onSelect={() => selectLocationHandler(loc.id)}
 						onLongPress={() => locationLongPressHandler(loc.id)}
 						loading={locationsLoadingState[loc.id]}

@@ -3,7 +3,7 @@ import * as actionTypes from './actionTypes';
 import { Coords, SearchLocationMetadata } from '../../Types/CustomeTypes';
 import { AxiosError } from 'axios';
 import { ThunkAction } from 'redux-thunk';
-import { RootState, StoreAction } from '../storeTypes';
+import { RootState, StoreAction, SimpleReducer, LocationState } from '../storeTypes';
 import LocationModel from '../../models/LocationModel';
 import DataAccess from '../../data/db';
 
@@ -137,13 +137,8 @@ export const addLocation = (location: LocationModel)
 				&& Math.trunc(x.coords.longitude) === Math.trunc(location.coords.longitude));
 		});
 
-		console.log('existingLocation', JSON.stringify(existingLocation, null, '\t'));
-
 		if (existingLocation) {
-			dispatch({
-				type: actionTypes.SET_HIGHLIGHTED_LOCATION,
-				payload: existingLocation.id
-			});
+			dispatch(setHighlightedLocation(existingLocation.id));
 		}
 		else {
 			try {
@@ -154,17 +149,20 @@ export const addLocation = (location: LocationModel)
 					type: actionTypes.ADD_LOCATION,
 					payload: location
 				});
-				dispatch({
-					type: actionTypes.SET_HIGHLIGHTED_LOCATION,
-					payload: location.id
-				});
+				dispatch(setHighlightedLocation(location.id));
 			}
 			catch (err) {
-				console.log('addind loc err: ', err);
 				throw err;
 			}
 		}
 	}
+};
+
+export const setHighlightedLocation = (id: (null | number)): StoreAction<null | number> => {
+	return {
+		type: actionTypes.SET_HIGHLIGHTED_LOCATION,
+		payload: id
+	};
 };
 
 export const removeLocation = (id: number)
@@ -189,7 +187,7 @@ export const getSavedLocations = ()
 		const dataAccess = new DataAccess();
 		try {
 			const locations = await dataAccess.getLocations();
-			const currentLocationId = await  dataAccess.getCurrentLocation();
+			const currentLocationId = await dataAccess.getCurrentLocation();
 			dispatch({
 				type: actionTypes.SET_LOCATIONS,
 				payload: locations
@@ -202,7 +200,6 @@ export const getSavedLocations = ()
 			}
 		}
 		catch (err) {
-			console.log('get Locs err: ', err);
 			throw err;
 		}
 	}
