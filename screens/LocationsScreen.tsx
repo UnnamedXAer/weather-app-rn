@@ -30,6 +30,8 @@ interface StatelessCmp extends React.FC<Props & NavigationStackScreenProps> {
 const LocationsScreen: StatelessCmp = props => {
 	const dispatch = useDispatch();
 	const locations = useSelector((state: RootState) => state.location.locations);
+	const currentLocationId = useSelector((state: RootState) => state.location.currentLocation?.id);
+	
 	const highlightedLocation = useSelector(
 		(state: RootState) => state.location.highlightedLocation
 	);
@@ -128,6 +130,7 @@ const LocationsScreen: StatelessCmp = props => {
 					<LocationItem
 						key={loc.id}
 						location={loc}
+						current={currentLocationId === loc.id}
 						highlighted={highlightedLocation === loc.id}
 						onSelect={() => selectLocationHandler(loc.id)}
 						onLongPress={() => locationLongPressHandler(loc.id)}

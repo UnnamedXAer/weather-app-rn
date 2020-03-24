@@ -4,6 +4,7 @@ import TouchableComponent from './UI/TouchableComponent';
 import LocationModel from '../models/LocationModel';
 import StyledText from './UI/StyledText';
 import Colors from '../constants/Colors';
+import { Checkbox } from 'react-native-paper';
 
 interface Props {
 	location: LocationModel;
@@ -11,6 +12,7 @@ interface Props {
 	onLongPress: () => void;
 	loading: boolean;
 	highlighted: boolean;
+	current: boolean;
 }
 
 interface StatelessCmp extends React.FC<Props> {}
@@ -20,7 +22,8 @@ const LocationItem: StatelessCmp = ({
 	onSelect,
 	onLongPress,
 	loading,
-	highlighted
+	highlighted,
+	current
 }) => {
 	return (
 		<TouchableComponent
@@ -41,7 +44,13 @@ const LocationItem: StatelessCmp = ({
 						{+location.coords.longitude.toFixed(2)}]
 					</StyledText>
 				</View>
-				<View>{loading && <ActivityIndicator color={Colors.primary} />}</View>
+				<View>
+					{loading ? (
+						<ActivityIndicator color={Colors.primary} />
+					) : (
+						current && <Checkbox status="checked" color={Colors.primary} />
+					)}
+				</View>
 			</View>
 		</TouchableComponent>
 	);
