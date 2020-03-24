@@ -76,7 +76,12 @@ const LocationsScreen: StatelessCmp = props => {
 		setDialogLocationId(id);
 	};
 
-	const removeLocationHandler = async () => {
+	const dialogSetLocAsCurrentHandler = () => {
+		dispatch(setCurrentLocation(dialogLocationId));
+		setDialogLocationId(null);
+	};
+
+	const dialogRemoveLocationHandler = async () => {
 		const id = dialogLocationId;
 		setLocationsLoadingState(prevState => ({ ...prevState, [id]: true }));
 		setDialogLocationId(null);
@@ -177,8 +182,8 @@ const LocationsScreen: StatelessCmp = props => {
 				dismissable
 				onDismiss={() => setDialogLocationId(null)}
 			>
-				<Button>Set as Current</Button>
-				<Button onPress={removeLocationHandler}>Delete</Button>
+				<Button onPress={dialogSetLocAsCurrentHandler}>Set as Current</Button>
+				<Button onPress={dialogRemoveLocationHandler}>Delete</Button>
 			</Dialog>
 		</View>
 	);
