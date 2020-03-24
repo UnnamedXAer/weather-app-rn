@@ -23,9 +23,13 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.firebaseapp.weatherapp9a6a2",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
     },
     "android": {
+      "package": "com.firebaseapp.weatherapp9a6a2",
+      "versionCode": 1,
       "icon": "./assets/images/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
@@ -35,7 +39,10 @@
         "image": "./assets/images/splash-screen.png",
         "resizeMode": "contain",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "ACCESS_FINE_LOCATION"
+      ]
     }
   }
 }
