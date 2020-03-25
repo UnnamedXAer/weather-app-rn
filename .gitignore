@@ -15,4 +15,4 @@ web-report/
 
 yarn-error.log
 
-.env
+env.ts
