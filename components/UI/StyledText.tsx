@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, GestureResponderEvent } from 'react-native';
-import Colors from '../../constants/Colors';
+import Colors from '../../config/Colors';
 
 interface Props {
 	children: React.ReactNode;

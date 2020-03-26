@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import StyledText from './StyledText';
-import Colors from '../../constants/Colors';
+import Colors from '../../config/Colors';
 
 const ErrorPanel = ({ message, showHeader }) => {
 	return (

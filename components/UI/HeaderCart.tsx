@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import Colors from "../../constants/Colors";
+import Colors from "../../config/Colors";
 
 const HeaderCart = ({ children }: { children: ReactNode }) => {
 	return <View style={styles.headerCart}>{children}</View>;
