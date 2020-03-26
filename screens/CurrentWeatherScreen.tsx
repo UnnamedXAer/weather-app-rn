@@ -14,7 +14,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import StyledText from '../components/UI/StyledText';
 import { RootState } from '../store/storeTypes';
 import HeaderCart from '../components/UI/HeaderCart';
-import Colors from '../constants/Colors';
+import Colors from '../config/Colors';
 import { fetchCurrentWeather } from '../store/actions/weather';
 import NoLocationInfo from '../components/NoLocationInfo';
 import ErrorPanel from '../components/UI/ErrorPanel';

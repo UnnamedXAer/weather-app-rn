@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import TouchableComponent from './UI/TouchableComponent';
 import LocationModel from '../models/LocationModel';
 import StyledText from './UI/StyledText';
-import Colors from '../constants/Colors';
+import Colors from '../config/Colors';
 
 interface Props {
     location: LocationModel;

@@ -9,7 +9,7 @@ import {
 } from '../store/actions/location';
 import HeaderCart from '../components/UI/HeaderCart';
 import { RootState } from '../store/storeTypes';
-import Colors from '../constants/Colors';
+import Colors from '../config/Colors';
 import LocationSearchResults from '../components/LocationSearchResults';
 import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';

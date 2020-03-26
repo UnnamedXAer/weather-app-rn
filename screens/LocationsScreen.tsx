@@ -15,7 +15,7 @@ import {
 } from '../store/actions/location';
 import { Button, Colors as PaperColors, Dialog } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
-import Colors from '../constants/Colors';
+import Colors from '../config/Colors';
 import ErrorPanel from '../components/UI/ErrorPanel';
 import Toast from 'react-native-simple-toast';
 import * as Permissions from 'expo-permissions';

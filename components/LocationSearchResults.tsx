@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import StyledText from './UI/StyledText';
 import LocationModel from '../models/LocationModel';
-import Colors from '../constants/Colors';
+import Colors from '../config/Colors';
 import { SearchLocationMetadata } from '../Types/CustomeTypes';
 import ErrorPanel from './UI/ErrorPanel';
 import LocationResultItem from './LocationResultItem';

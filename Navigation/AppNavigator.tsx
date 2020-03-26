@@ -14,7 +14,7 @@ import FindLocationScreen from '../screens/FindLocationScreen';
 import CurrentWeatherScreen from '../screens/CurrentWeatherScreen';
 import ForecastWeatherScreen from '../screens/ForecastWeatherScreen';
 import AboutScreen from '../screens/AboutScreen';
-import Colors from '../constants/Colors';
+import Colors from '../config/Colors';
 import StyledText from '../components/UI/StyledText';
 import LocationsScreen from '../screens/LocationsScreen';
 

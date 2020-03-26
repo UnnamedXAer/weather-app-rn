@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View, ActivityIndicator, Dimensions } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, Dimensions } from 'react-native';
 import { CurrentWeatherData } from '../models/WeatherModels';
 import LocationModel from '../models/LocationModel';
 import StyledText from './UI/StyledText';
-import Colors from '../constants/Colors';
+import Colors from '../config/Colors';
 import { dateToLocalString } from '../utils/time';
 import { Linking } from 'expo';
 

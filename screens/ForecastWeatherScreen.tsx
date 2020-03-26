@@ -11,7 +11,7 @@ import HeaderCart from '../components/UI/HeaderCart';
 import ErrorPanel from '../components/UI/ErrorPanel';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/storeTypes';
-import Colors from '../constants/Colors';
+import Colors from '../config/Colors';
 import StyledText from '../components/UI/StyledText';
 import { fetchForecastWeather } from '../store/actions/weather';
 import ForecastWeatherDetails from '../components/ForecastWeatherDetails';

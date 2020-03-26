@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { ForecastWeatherData } from '../models/WeatherModels';
-import Colors from '../constants/Colors';
+import Colors from '../config/Colors';
 import StyledText from './UI/StyledText';
 import { dateToLocalString } from '../utils/time';
 import { addUnits } from '../utils/units';

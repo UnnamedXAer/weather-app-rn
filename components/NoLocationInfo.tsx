@@ -1,8 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { NavigationStackScreenProps } from 'react-navigation-stack';
 import StyledText from './UI/StyledText';
-import Colors from '../constants/Colors';
+import Colors from '../config/Colors';
 import { NavigationRoute, NavigationParams } from 'react-navigation';
 import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
 

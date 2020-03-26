@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView, Linking, Dimensions } from 'react-native';
 import StyledText from '../components/UI/StyledText';
 import { createNavigationOptions } from '../Navigation/NavigationUtils';
-import Colors from '../constants/Colors';
+import Colors from '../config/Colors';
 
 const AboutScreen = () => {
     return (
