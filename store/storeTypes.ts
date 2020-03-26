@@ -28,6 +28,9 @@ export interface WeatherState {
     forecastWeatherError: null | string,
     forecastWeatherLoading: boolean,
 
+    currentWeatherRefreshing: boolean;
+    currentWeatherRefreshingError: null | string,
+    
     forecastWeatherRefreshing: boolean;
     forecastWeatherRefreshingError: null | string,
 };

@@ -7,7 +7,8 @@ import {
 	Text,
 	TouchableOpacity,
 	ActivityIndicator,
-	Dimensions
+	Dimensions,
+	RefreshControl
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import { useSelector, useDispatch } from 'react-redux';
@@ -35,6 +36,12 @@ const CurrentWeatherScreen = props => {
 	const currentWeatherLoading = useSelector(
 		(state: RootState) => state.weather.currentWeatherLoading
 	);
+	const currentWeatherRefreshing = useSelector(
+		(state: RootState) => state.weather.currentWeatherRefreshing
+	);
+	const currentWeatherRefreshingError = useSelector(
+		(state: RootState) => state.weather.currentWeatherRefreshingError
+	);
 
 	useEffect(() => {
 		if (location) {
@@ -42,8 +49,24 @@ const CurrentWeatherScreen = props => {
 		}
 	}, [location]);
 
+	useEffect(() => {
+		if (currentWeatherRefreshingError) {
+			Toast.showWithGravity(
+				currentWeatherRefreshingError,
+				Toast.SHORT,
+				Toast.CENTER
+			);
+		}
+	}, [currentWeatherRefreshingError]);
+
 	const imagePressHandler = () => {
 		Toast.showWithGravity(currentWeatherData.description, Toast.SHORT, Toast.CENTER);
+	};
+
+	const refreshHandler = () => {
+		if (!currentWeatherRefreshing && location && !currentWeatherLoading) {
+			dispatch(fetchCurrentWeather(location, false));
+		}
 	};
 
 	if (!location) {
@@ -51,7 +74,18 @@ const CurrentWeatherScreen = props => {
 	}
 
 	return (
-		<ScrollView style={styles.screen}>
+		<ScrollView 
+		style={styles.screen}
+		refreshControl={
+			location &&
+			!currentWeatherLoading && (
+				<RefreshControl
+					refreshing={currentWeatherRefreshing}
+					onRefresh={refreshHandler}
+				/>
+			)
+		}
+		>
 			<HeaderCart>
 				<View style={styles.weather}>
 					<StyledText style={styles.locationName}>

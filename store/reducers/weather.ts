@@ -5,6 +5,8 @@ const initialState: WeatherState = {
 	currentWeather: null,
 	currentWeatherError: null,
 	currentWeatherLoading: false,
+	currentWeatherRefreshing: false,
+	currentWeatherRefreshingError: null,
 	forecastWeather: null,
 	forecastWeatherError: null,
 	forecastWeatherLoading: false,
@@ -82,6 +84,34 @@ const fetchForecastWeatherFail = (state, action) => {
 	};
 };
 
+const refreshCurrentWeatherStart = (state: WeatherState, _action): WeatherState => {
+	return {
+		...state,
+		currentWeatherRefreshing: true,
+		currentWeatherRefreshingError: null
+	};
+};
+
+const refreshCurrentWeatherSuccess = (state: WeatherState, action): WeatherState => {
+	return {
+		...state,
+		currentWeatherRefreshing: false,
+		currentWeatherRefreshingError: null,
+		currentWeather: action.payload
+	};
+};
+
+const refreshCurrentWeatherFail = (state: WeatherState, action): WeatherState => {
+
+	let message = 'Sorry, could not refresh current weather data.';
+
+	return {
+		...state,
+		currentWeatherRefreshing: false,
+		currentWeatherRefreshingError: message
+	};
+};
+
 const refreshForecastWeatherStart = (state: WeatherState, _action): WeatherState => {
 	return {
 		...state,
@@ -115,6 +145,10 @@ const reducer = (state = initialState, action) => {
 		case actionTypes.FETCH_CURRENT_WEATHER_START: return fetchCurrentWeatherStart(state, action);
 		case actionTypes.FETCH_CURRENT_WEATHER_SUCCESS: return fetchCurrentWeatherSuccess(state, action);
 		case actionTypes.FETCH_CURRENT_WEATHER_FAIL: return fetchCurrentWeatherFail(state, action);
+
+		case actionTypes.REFRESH_CURRENT_WEATHER_START: return refreshCurrentWeatherStart(state, action);
+		case actionTypes.REFRESH_CURRENT_WEATHER_SUCCESS: return refreshCurrentWeatherSuccess(state, action);
+		case actionTypes.REFRESH_CURRENT_WEATHER_FAIL: return refreshCurrentWeatherFail(state, action);
 
 		case actionTypes.FETCH_FORECAST_WEATHER_START: return fetchForecastWeatherStart(state, action);
 		case actionTypes.FETCH_FORECAST_WEATHER_SUCCESS: return fetchForecastWeatherSuccess(state, action);

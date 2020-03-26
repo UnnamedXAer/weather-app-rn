@@ -64,7 +64,6 @@ const ForecastWeatherScreen = props => {
 
 	const refreshHandler = () => {
 		if (!forecastWeatherRefreshing && location && !forecastWeatherLoading) {
-			alert('About to refresh weather');
 			dispatch(fetchForecastWeather(location, false));
 		}
 	};
